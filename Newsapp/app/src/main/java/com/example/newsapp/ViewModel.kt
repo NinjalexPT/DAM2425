@@ -1,18 +1,10 @@
 package com.example.newsapp
 
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
 import com.example.newsapp.module.Article
-import com.example.newsapp.module.RowArticle
-import com.example.newsapp.ui.theme.NewsappTheme
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -21,25 +13,12 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
-@Composable
-fun NewsApp(modifier: Modifier = Modifier) {
+class NewsViewModel : ViewModel() {
 
-    //var viewModel = NewsViewModel()
-    //val articles by viewModel.articles
-    var articles by remember{ mutableStateOf(listOf<Article>()) }
+    var articles by mutableStateOf(listOf<Article>())
+        private set
 
-    LazyColumn {
-        itemsIndexed(
-            items = articles,
-        ){
-                index, article ->
-            RowArticle(article = article)
-        }
-
-    }
-
-    LaunchedEffect(Unit) {
-        //viewModel.fetchArticles()
+    fun fetchArticles(){
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -71,15 +50,5 @@ fun NewsApp(modifier: Modifier = Modifier) {
                 }
             }
         })
-    }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun NewsAppPreview() {
-    NewsappTheme {
-        NewsApp()
     }
 }
