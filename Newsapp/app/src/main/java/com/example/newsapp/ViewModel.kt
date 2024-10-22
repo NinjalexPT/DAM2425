@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.newsapp.module.Article
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -13,12 +16,23 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
+data class ArticlesState (
+    val articles: ArrayList<Article> = arrayListOf(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+    )
+
 class NewsViewModel : ViewModel() {
 
-    var articles by mutableStateOf(listOf<Article>())
-        private set
+    private val _uiState = MutableStateFlow(ArticlesState())
+    val uiState : StateFlow<ArticlesState> = _uiState.asStateFlow()
 
     fun fetchArticles(){
+
+        _uiState.value = ArticlesState(
+            isLoading = true,
+            error = null)
+
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -28,6 +42,9 @@ class NewsViewModel : ViewModel() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
+                _uiState.value = ArticlesState(
+                    isLoading = true,
+                    error = e.message)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -45,7 +62,10 @@ class NewsViewModel : ViewModel() {
                             articlesResult.add(article)
                         }
                     }
-                    articles = articlesResult
+                    _uiState.value = ArticlesState(
+                        articles = articlesResult,
+                        isLoading = false,
+                        error = null)
 
                 }
             }
