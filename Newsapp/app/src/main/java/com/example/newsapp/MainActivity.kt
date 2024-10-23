@@ -12,8 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.ui.theme.NewsappTheme
 import androidx.navigation.compose.composable
-import com.example.newsapp.ArticleDetail
-import com.example.newsapp.NewsApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +38,8 @@ class MainActivity : ComponentActivity() {
                                 url = url ?: ""
 
                             )
-
                         }
                     }
-
                 }
             }
         }

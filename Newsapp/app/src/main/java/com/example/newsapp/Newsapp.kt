@@ -35,6 +35,7 @@ fun NewsApp(
     LaunchedEffect(Unit) {
         viewModel.fetchArticles()
     }
+
 }
 
 @Composable
@@ -56,26 +57,23 @@ fun NewsAppContent(modifier: Modifier = Modifier,
                 .fillMaxSize()) {
                 itemsIndexed(
                     items = uiState.articles,
-                ){ index, article ->
+                ) { index, article ->
                     RowArticle(
                         modifier = Modifier
                             .clickable {
-                                Log.d("dailynews",article.url ?:"none")
+                                Log.d("dailynews", article.url ?: "none")
                                 navController.navigate(
                                     Screen.ArticleDetail.route
-                                        .replace("{articleUrl}", article.url?.encodeURL()?:"")
+                                        .replace("{articleUrl}", article.url?.encodeURL() ?: "")
                                 )
                             },
-                        article = article)
+                        article = article
+                    )
                 }
             }
         }
     }
-
 }
-
-
-
 
 @Preview(showBackground = true)
 @Composable

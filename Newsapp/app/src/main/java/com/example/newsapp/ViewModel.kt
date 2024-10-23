@@ -1,8 +1,5 @@
 package com.example.newsapp
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.newsapp.module.Article
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,10 +62,13 @@ class NewsViewModel : ViewModel() {
                     _uiState.value = ArticlesState(
                         articles = articlesResult,
                         isLoading = false,
-                        error = null)
+                        error = null
+                    )
 
                 }
             }
-        })
+        }
+
+        )
     }
 }
