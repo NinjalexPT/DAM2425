@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.duckpage.ui.theme.DuckPageTheme
 
+//https://random-d.uk/api
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DuckPageTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    DuckContent(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
