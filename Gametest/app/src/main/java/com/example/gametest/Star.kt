@@ -29,13 +29,14 @@ class Star {
         speed = generator.nextInt(15) + 1
     }
 
-    fun update(){
+    fun update(playerSpeed: Int){
+        x -= playerSpeed
         x -= speed
 
         if(x < 0){
             x = maxX
             y = generator.nextInt(maxY)
-            speed = generator.nextInt(15)
+            speed = generator.nextInt(15) + 1
         }
     }
 
