@@ -28,6 +28,8 @@ class GameView : SurfaceView, Runnable{
     var enemies = arrayListOf<Enemy>()
     lateinit var boom : Boom
 
+    var bullets = arrayListOf<Bullet>()
+    var lastBulletTime = System.currentTimeMillis()
 
     private fun init(context: Context, width: Int, height: Int){
         surfaceHolder = holder
@@ -88,6 +90,21 @@ class GameView : SurfaceView, Runnable{
             s.update(player.speed)
         }
         player.update()
+
+        if (player.boosting && System.currentTimeMillis() - lastBulletTime >= 500) {
+            bullets.add(Bullet(context, player.x + player.bitmap.width, player.y + player.bitmap.height / 2))
+            lastBulletTime = System.currentTimeMillis() // Atualiza o tempo da última bala
+        }
+
+        val bulletsToRemove = mutableListOf<Bullet>()
+
+        for (bullet in bullets) {
+            bullet.update()
+        }
+
+        // Remove balas fora da tela
+
+
         for (e in enemies){
             e.update(player.speed)
             if(Rect.intersects(e.detectCollisions, player.detectCollisions)){
@@ -97,8 +114,19 @@ class GameView : SurfaceView, Runnable{
                 e.x = -300
 
             }
+            for (bullet in bullets) {
+                if (Rect.intersects(e.detectCollisions, bullet.detectCollisions)) {
+
+                    boom.x = e.x
+                    boom.y = e.y
+                    e.x = -300
+                    bulletsToRemove.add(bullet)
+                }
+            }
         }
 
+        bullets.removeAll { it.x > width }
+        bullets.removeAll(bulletsToRemove)
 
     }
 
@@ -125,6 +153,10 @@ class GameView : SurfaceView, Runnable{
                 canvas.drawBitmap(e.bitmap, e.x.toFloat(), e.y.toFloat(), paint)
             }
 
+            for (bullet in bullets) {
+                canvas.drawBitmap(bullet.bitmap, bullet.x.toFloat(), bullet.y.toFloat(), paint)
+            }
+
             paint.strokeWidth = 5.0f
             surfaceHolder.unlockCanvasAndPost(canvas)
         }
@@ -137,6 +169,8 @@ class GameView : SurfaceView, Runnable{
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
                 player.boosting = true
+                // Define o tempo da última bala ao tocar na tela
+                lastBulletTime = System.currentTimeMillis()
             }
 
             MotionEvent.ACTION_UP -> {

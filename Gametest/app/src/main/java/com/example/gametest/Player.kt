@@ -14,6 +14,8 @@ class Player {
     var minX = 0
     var minY = 0
 
+
+
     var bitmap : Bitmap
 
     var boosting = false
