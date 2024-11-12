@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+
 import android.os.Handler
 import android.os.Looper
 
@@ -13,7 +14,7 @@ import android.util.SparseArray
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-
+import androidx.compose.runtime.remember
 
 
 class GameView : SurfaceView, Runnable{
@@ -25,10 +26,11 @@ class GameView : SurfaceView, Runnable{
 
     var Score = 0
 
+    val soundPlayer = SoundPlayer(context)
+    val soundId = soundPlayer.loadSound(R.raw.Laser_shot)
 
     // Variável para armazenar o estado dos toques
     private val activeTouches = SparseArray<Boolean>()
-
 
 
     lateinit var paint : Paint
@@ -195,6 +197,7 @@ class GameView : SurfaceView, Runnable{
             playing = false
             Handler(Looper.getMainLooper()).post {
                 if (!callGameOverOnce) {
+                    soundPlayer.release()
                     onGameOver()
                     callGameOverOnce = true
                 }
@@ -216,7 +219,7 @@ class GameView : SurfaceView, Runnable{
                     val x = event.getX(index)
                     val y = event.getY(index)
 
-
+                    soundPlayer.playSound(soundId)
 
 
                     if (x > width - (width / 10f) - (height / 10f) * 1.5f
@@ -235,6 +238,8 @@ class GameView : SurfaceView, Runnable{
                             )
                         )
                         activeTouches.put(pointerId, false)
+
+
                     } else {
                         player.boosting = true
                         activeTouches.put(pointerId,true)
