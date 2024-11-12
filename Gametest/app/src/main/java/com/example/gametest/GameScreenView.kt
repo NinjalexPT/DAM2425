@@ -4,9 +4,12 @@ package com.example.gametest
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
-fun GameScreenView () {
+fun GameScreenView (
+    onGameOver: () -> Unit = {}
+) {
 
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
@@ -16,13 +19,17 @@ fun GameScreenView () {
     val screenWidthPx = screenWidth * density
     val screenHeightPx = screenHeight * density
 
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     AndroidView(factory = { context ->
         GameView(context = context,
             width = screenWidthPx.toInt(),
             height = screenHeightPx.toInt() )
-    },
-        update = {
-            it.resume()
+    }) {
+        it.resume()
+        it.onGameOver = {
+            onGameOver()
+
         }
-    )
+    }
 }

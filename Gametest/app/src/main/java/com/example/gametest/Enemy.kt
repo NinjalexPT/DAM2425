@@ -29,7 +29,8 @@ class Enemy {
 
         constructor(context: Context, width: Int, height: Int){
 
-            bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.enemy)
+            bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.enemy).let {
+                Bitmap.createScaledBitmap(it, width/6, height/5, false) }
 
             minX = 0
             maxX = width

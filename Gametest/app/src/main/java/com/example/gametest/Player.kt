@@ -29,7 +29,7 @@ class Player {
 
     constructor(context: Context, width: Int, height: Int){
 
-        bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.player)
+        bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.player).let { Bitmap.createScaledBitmap(it, width/8, height/4, false) }
 
         minX = 0
         maxX = width

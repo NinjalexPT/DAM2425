@@ -6,6 +6,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 
+
+
 class Bullet{
     var x = 0
     var y = 0
@@ -16,14 +18,15 @@ class Bullet{
 
     var detectCollisions : Rect
 
-    constructor(context: Context, startX: Int, startY: Int){
+    constructor(context: Context, startX: Int, startY: Int,width: Int, height: Int){
 
         x = startX
-        y = startY
+
 
         bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.bullet).let{
-            Bitmap.createScaledBitmap(it, 60, 40, false)
+            Bitmap.createScaledBitmap(it, width/18, height/12, false)
         }
+        y = startY - (bitmap.height / 2)
         detectCollisions = Rect(x, y, bitmap.width, bitmap.height)
 
 
