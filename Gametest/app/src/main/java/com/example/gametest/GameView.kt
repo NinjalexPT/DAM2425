@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.media.SoundPool
 
 import android.os.Handler
 import android.os.Looper
@@ -28,6 +29,10 @@ class GameView : SurfaceView, Runnable{
     // Variável para armazenar o estado dos toques
     private val activeTouches = SparseArray<Boolean>()
 
+    private lateinit var soundPool: SoundPool
+    private var soundId: Int = 0
+    private var soundId2: Int = 0
+
 
     lateinit var paint : Paint
     lateinit var paint2 : Paint
@@ -48,6 +53,9 @@ class GameView : SurfaceView, Runnable{
         paint = Paint()
         paint2 = Paint()
 
+        soundPool = SoundPool.Builder().build()
+        soundId = soundPool.load(context, R.raw.laser, 1)
+        soundId2 = soundPool.load(context, R.raw.explosion, 1)
 
 
         for (i in 0..100){
@@ -126,6 +134,7 @@ class GameView : SurfaceView, Runnable{
                 boom.y = e.y
                 e.x = -600
                 lives -= 1
+                soundPool.play(soundId2, 2f, 2f, 1, 0, 1f)
 
 
             }
@@ -137,6 +146,7 @@ class GameView : SurfaceView, Runnable{
                     e.x = -600
                     bulletstoremove.add(bullet)
                     Score += 1
+                    soundPool.play(soundId2, 2f, 2f, 1, 0, 1f)
                 }
 
                 if(bullet.x > width){
@@ -217,12 +227,14 @@ class GameView : SurfaceView, Runnable{
                     val y = event.getY(index)
 
 
+
                     if (x > width - (width / 10f) - (height / 10f) * 1.5f
                         && x < width - (width / 10f) + (height / 10f) * 1.5f
                         && y > height - (height / 10f) * 2 - (height / 10f) * 1.5f
                         && y < height - (height / 10f) + (height / 10f) * 1.5f
                     ) {
 
+                        soundPool.play(soundId, 2f, 2f, 1, 0, 1f)
                         bullets.add(
                             Bullet(
                                 context,
