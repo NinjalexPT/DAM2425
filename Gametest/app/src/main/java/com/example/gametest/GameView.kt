@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.media.MediaPlayer
 import android.media.SoundPool
 
 import android.os.Handler
@@ -33,6 +34,8 @@ class GameView : SurfaceView, Runnable{
     private var soundId: Int = 0
     private var soundId2: Int = 0
 
+    val mediaPlayer = MediaPlayer.create(context, R.raw.backgroundmusic)
+
 
     lateinit var paint : Paint
     lateinit var paint2 : Paint
@@ -57,6 +60,9 @@ class GameView : SurfaceView, Runnable{
         soundId = soundPool.load(context, R.raw.laser, 1)
         soundId2 = soundPool.load(context, R.raw.explosion, 1)
 
+        mediaPlayer.isLooping = true // Reproduzir em loop
+        mediaPlayer.setVolume(1f, 1f) // Ajustar o volume (0.0 a 1.0)
+        mediaPlayer.start() // Iniciar a reprodução
 
         for (i in 0..100){
             stars.add(Star(width, height))
@@ -202,6 +208,8 @@ class GameView : SurfaceView, Runnable{
     fun control(){
         Thread.sleep(17)
         if (lives == 0 ){
+            mediaPlayer.stop() // Parar a reprodução
+
             playing = false
             Handler(Looper.getMainLooper()).post {
                 if (!callGameOverOnce) {
