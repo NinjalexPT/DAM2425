@@ -1,4 +1,4 @@
-package com.example.myshoppinglist
+package com.example.myshoppinglist.ui.lists
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
