@@ -11,13 +11,14 @@ import com.google.firebase.ktx.Firebase
 data class RegisterState(
     val email: String = "",
     val password: String = "",
+    val passwordConfirmation: String = "",
     val isLoading: Boolean = false,
     val error: String? = null
 )
 
 class RegisterViewModel : ViewModel() {
 
-    var state = mutableStateOf(LoginState())
+    var state = mutableStateOf(RegisterState())
         private set
 
     fun onEmailChange(email: String) {
@@ -28,12 +29,23 @@ class RegisterViewModel : ViewModel() {
         state.value = state.value.copy(password = password)
     }
 
+    fun onPasswordConfirmationChange(passwordConfirmation: String) {
+        state.value = state.value.copy(passwordConfirmation = passwordConfirmation)
+    }
+
     fun userinserted(): Boolean {
         if (state.value.email.isEmpty() || state.value.password.isEmpty()) {
 
             state.value = state.value.copy(error = "Email and password cannot be empty")
             return false
         }else return true
+    }
+
+    fun CheckPasswords(): Boolean {
+        if (state.value.password != state.value.passwordConfirmation) {
+            state.value = state.value.copy(error = "Passwords do not match")
+            return false
+        } else return true
     }
 
     fun onRegisterClick() {

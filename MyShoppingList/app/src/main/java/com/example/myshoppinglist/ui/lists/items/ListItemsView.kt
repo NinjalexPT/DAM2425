@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myshoppinglist.R
+import com.example.myshoppinglist.Screen
 import com.example.myshoppinglist.ui.theme.MyShoppingListTheme
 
 @Composable
@@ -58,6 +59,7 @@ fun ListItemsView(
                 .padding(16.dp)
                 .size(64.dp),
             onClick = {
+                navController.navigate(Screen.AddItem.route)
 
             }) {
             Image(

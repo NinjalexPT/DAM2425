@@ -52,9 +52,17 @@ fun RegisterView(modifier: Modifier = Modifier, navController: NavController = r
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
+            TextField(value = state.passwordConfirmation,
+                onValueChange = {
+                    viewModel.onPasswordConfirmationChange(it)
+                },
+                placeholder = {Text("password confirmation")})
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
+                    if (viewModel.CheckPasswords())
                     viewModel.onRegisterClick()
+
 
                     if (state.error == "") {
                         navController.navigate(Screen.Home.route)
