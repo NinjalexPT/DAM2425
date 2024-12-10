@@ -6,13 +6,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myshoppinglist.ui.MyTopBar
+import com.example.myshoppinglist.ui.getScreenTitle
 import com.example.myshoppinglist.ui.lists.AddListView
 import com.example.myshoppinglist.ui.lists.ListListview
 import com.example.myshoppinglist.ui.lists.items.AddItemView
@@ -31,7 +42,22 @@ class MainActivity : ComponentActivity() {
             MyShoppingListTheme {
                 var navController = rememberNavController()
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                // Observe the current route
+                val currentBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = currentBackStackEntry?.destination?.route
+
+                // Determine if back navigation is possible
+                val canNavigateBack = navController.previousBackStackEntry != null && (currentRoute != Screen.Home.route && currentRoute != Screen.Login.route)
+
+                Scaffold(topBar = {
+                    MyTopBar(
+                        title = getScreenTitle(currentRoute),
+                        canNavigateBack = canNavigateBack,
+                        onBackClick = { navController.popBackStack() }
+                    )
+                },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
@@ -60,7 +86,8 @@ class MainActivity : ComponentActivity() {
                             val listId = it.arguments?.getString("listId")
                             ListItemsView(
                                 modifier = Modifier.padding(innerPadding),
-                                listId = listId ?: ""
+                                listId = listId ?: "",
+                                navController = navController
                             )
                         }
                         composable(Screen.AddItem.route){
@@ -90,6 +117,7 @@ sealed class Screen(val route: String){
     object AddList : Screen("add_list")
     object ListItems : Screen("list_items/{listId}")
     object Register : Screen("register")
-    object AddItem : Screen("add_item")
+    object AddItem : Screen("add_item/{listId}")
 
 }
+

@@ -60,13 +60,13 @@ fun RegisterView(modifier: Modifier = Modifier, navController: NavController = r
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    if (viewModel.CheckPasswords())
-                    viewModel.onRegisterClick()
-
-
-                    if (state.error == "") {
+                    if (viewModel.CheckPasswords()) {
+                        viewModel.onRegisterClick()
+                    }
+                    if(state.error == "") {
                         navController.navigate(Screen.Home.route)
                     }
+
                 },
                 content = {
                     Text("Register")

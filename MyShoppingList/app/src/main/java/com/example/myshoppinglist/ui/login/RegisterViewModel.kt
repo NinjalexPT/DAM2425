@@ -57,6 +57,7 @@ class RegisterViewModel : ViewModel() {
             auth.createUserWithEmailAndPassword(state.value.email, state.value.password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        state.value = state.value.copy(isLoading = false)
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         val user = auth.currentUser
@@ -64,6 +65,7 @@ class RegisterViewModel : ViewModel() {
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
                         state.value =
                             state.value.copy(error = task.exception?.message ?: "Unknown error")
+                        state.value = state.value.copy(isLoading = false)
                     }
                 }
 

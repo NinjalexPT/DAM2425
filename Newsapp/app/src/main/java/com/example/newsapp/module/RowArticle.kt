@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
 import com.example.newsapp.R
-import com.example.newsapp.toYYMMDD
+import com.example.newsapp.toYYYYMMDD
 
 import com.example.newsapp.ui.theme.NewsappTheme
 import java.util.Date
@@ -68,7 +68,7 @@ fun RowArticle(modifier: Modifier = Modifier, article: Article) {
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(text = article.publishedDate?.toYYMMDD() ?: "",
+            Text(text = article.publishedDate?.toYYYYMMDD() ?: "",
                 style = MaterialTheme.typography.bodySmall)
         }
     }

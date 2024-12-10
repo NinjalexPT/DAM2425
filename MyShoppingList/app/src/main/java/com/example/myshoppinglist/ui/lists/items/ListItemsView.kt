@@ -37,9 +37,10 @@ fun ListItemsView(
 
 
     Box(modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd) {
+        contentAlignment = Alignment.BottomEnd
+    ) {
 
-        LazyColumn(modifier = modifier.fillMaxSize()) {
+        LazyColumn(modifier = modifier.fillMaxSize().align(Alignment.TopStart)) {
             itemsIndexed(
                 items = state.items
             ) { index, item ->
@@ -57,11 +58,12 @@ fun ListItemsView(
         Button(
             modifier = Modifier
                 .padding(16.dp)
-                .size(64.dp),
+                .size(64.dp).align(Alignment.BottomEnd),
             onClick = {
-                navController.navigate(Screen.AddItem.route)
-
-            }) {
+                navController.navigate(Screen.AddItem.route.replace("{listId}", listId))
+            }
+        )
+        {
             Image(
                 modifier = Modifier
                     .scale(2.0f)
