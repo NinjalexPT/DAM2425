@@ -14,11 +14,13 @@ import androidx.compose.material3.Text
 
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +42,8 @@ fun MyTopAppBar(
 ){
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var articleIsFavorite by remember { mutableStateOf(false) }
+    var articleIsFavorite by remember { mutableStateOf(false)
+    }
 
     TopAppBar(title = {
         if (article != null){
@@ -86,21 +89,43 @@ fun MyTopAppBar(
                         contentDescription = "Share"
                     )
                 }
+
+                val dao = remember { AppDatabase.getInstance(context)?.articleDao() }
+
+                // Verificar se o artigo já está nos favoritos quando o componente for carregado
+                if (article != null) {
+                    LaunchedEffect(key1 = article.url) {
+                        scope.launch(Dispatchers.IO) {
+                            val storedArticle = dao?.loadByUrl(article.url)
+                            articleIsFavorite = storedArticle != null
+                        }
+                    }
+                }
+
+
                 IconButton(
                     onClick = {
-                        // TODO: toggle favorites
-
                         scope.launch(Dispatchers.IO) {
-                            AppDatabase.getInstance(context)
-                                ?.articleDao()
-                                ?.insert(article!!)
-
+                            if (articleIsFavorite) {
+                                // Remove o artigo dos favoritos
+                                if (article != null) {
+                                    dao?.delete(article)
+                                }
+                            } else {
+                                // Adiciona o artigo aos favoritos
+                                if (article != null) {
+                                    dao?.insert(article)
+                                }
+                            }
+                            // Atualiza o estado do ícone
+                            articleIsFavorite = !articleIsFavorite
                         }
                     }
                 ) {
                     Icon(
                         imageVector = if (articleIsFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                        contentDescription = "Favorites"
+                        contentDescription = "Favorites",
+                        tint = Color.Gray
                     )
                 }
             }
