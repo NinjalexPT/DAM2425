@@ -1,4 +1,4 @@
-package com.example.newsapp
+package com.example.newsapp.ui.Home
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -14,34 +14,36 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.newsapp.module.RowArticle
+import com.example.newsapp.Screen
+import com.example.newsapp.module.Article
 import com.example.newsapp.ui.theme.NewsappTheme
 
 @Composable
-fun NewsApp(
+fun HomeView(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()) {
 
-    val viewModel : NewsViewModel = viewModel()
+    val viewModel : HomeViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    NewsAppContent(modifier = modifier,
+    HomeViewContent(modifier = modifier,
         navController = navController,
         uiState = uiState)
 
     LaunchedEffect(Unit) {
         viewModel.fetchArticles()
     }
-
 }
 
 @Composable
-fun NewsAppContent(modifier: Modifier = Modifier,
+fun HomeViewContent(modifier: Modifier = Modifier,
                     navController: NavController = rememberNavController(),
-                    uiState: ArticlesState) {
+                    uiState: ArticlesState
+) {
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center){
         if (uiState.isLoading) {
@@ -57,28 +59,21 @@ fun NewsAppContent(modifier: Modifier = Modifier,
                 .fillMaxSize()) {
                 itemsIndexed(
                     items = uiState.articles,
-                ) { index, article ->
+                ){ index, article ->
                     RowArticle(
                         modifier = Modifier
                             .clickable {
-                                Log.d("dailynews", article.url ?: "none")
+                                Log.d("dailynews",article.url ?:"none")
                                 navController.navigate(
                                     Screen.ArticleDetail.route
-                                        .replace("{articleUrl}", article.url?.encodeURL() ?: "")
+                                        .replace("{article}", article.toJsonString())
                                 )
                             },
-                        article = article
-                    )
+                        article = article)
                 }
             }
         }
     }
+
 }
 
-@Preview(showBackground = true)
-@Composable
-fun NewsAppPreview() {
-    NewsappTheme {
-        NewsApp()
-    }
-}

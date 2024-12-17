@@ -1,4 +1,4 @@
-package com.example.newsapp.components
+package com.example.newsapp.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite

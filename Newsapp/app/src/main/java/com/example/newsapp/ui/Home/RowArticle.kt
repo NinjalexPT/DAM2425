@@ -1,4 +1,4 @@
-package com.example.newsapp.module
+package com.example.newsapp.ui.Home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
 import com.example.newsapp.R
+import com.example.newsapp.module.Article
 import com.example.newsapp.toYYYYMMDD
 
 import com.example.newsapp.ui.theme.NewsappTheme

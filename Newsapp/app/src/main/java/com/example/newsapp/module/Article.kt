@@ -20,7 +20,7 @@ class Article (
     var imageUrl: String? = null,
     @PrimaryKey
     var url: String,
-    var publishedDate: Date? = null){
+    var publishedDate: Date? = null ){
 
     companion object{
         fun fromjson(json: JSONObject):Article{

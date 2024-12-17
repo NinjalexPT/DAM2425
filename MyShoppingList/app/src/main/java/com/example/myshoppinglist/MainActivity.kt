@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.ListItems.route) {
                             val listId = it.arguments?.getString("listId")
                             ListItemsView(
-                                modifier = Modifier.padding(innerPadding),
+
                                 listId = listId ?: "",
                                 navController = navController
                             )

@@ -27,7 +27,7 @@ import com.example.myshoppinglist.ui.theme.MyShoppingListTheme
 
 @Composable
 fun ListItemsView(
-    modifier: Modifier = Modifier,
+
     listId : String,
     navController: NavController = rememberNavController()
 ){
@@ -36,11 +36,11 @@ fun ListItemsView(
     val state = viewModel.state.value
 
 
-    Box(modifier = modifier.fillMaxSize(),
+    Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
 
-        LazyColumn(modifier = modifier.fillMaxSize().align(Alignment.TopStart)) {
+        LazyColumn(modifier = Modifier.fillMaxSize().align(Alignment.TopStart)) {
             itemsIndexed(
                 items = state.items
             ) { index, item ->

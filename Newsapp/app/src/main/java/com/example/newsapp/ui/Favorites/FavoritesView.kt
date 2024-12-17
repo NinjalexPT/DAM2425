@@ -1,4 +1,4 @@
-package com.example.newsapp.Favorites
+package com.example.newsapp.ui.Favorites
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -14,23 +14,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.newsapp.Screen.*
-import com.example.newsapp.module.RowArticle
 import com.example.newsapp.Screen
-import com.example.newsapp.module.Article
-import com.example.newsapp.module.RowArticle
-import com.example.newsapp.ui.theme.NewsappTheme
+import com.example.newsapp.Screen.*
+import com.example.newsapp.ui.Home.RowArticle
 
 @Composable
 fun FavoritesView(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()) {
 
-    val context = LocalContext.current
-    val viewModel : FavotritesViewModel = viewModel()
+    val viewModel : FavotritesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     FavotritesViewContent(modifier = modifier,
@@ -38,7 +35,7 @@ fun FavoritesView(
         uiState = uiState)
 
     LaunchedEffect(Unit) {
-        viewModel.fetchArticles(context)
+        viewModel.fetchArticles()
     }
 }
 
@@ -67,7 +64,7 @@ fun  FavotritesViewContent(modifier: Modifier = Modifier,
                             .clickable {
                                 Log.d("dailynews",article.url ?:"none")
                                 navController.navigate(
-                                    ArticleDetail.route
+                                    Screen.ArticleDetail.route
                                         .replace("{article}", article.toJsonString())
                                 )
                             },

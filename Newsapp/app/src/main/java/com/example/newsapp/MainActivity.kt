@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,46 +17,51 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.ui.theme.NewsappTheme
 import androidx.navigation.compose.composable
-import com.example.newsapp.Favorites.FavoritesView
-import com.example.newsapp.components.MyBottomBar
-import com.example.newsapp.components.MyTopAppBar
+import com.example.newsapp.ui.Favorites.FavoritesView
+import com.example.newsapp.ui.components.MyBottomBar
+import com.example.newsapp.ui.components.MyTopAppBar
+import com.example.newsapp.module.Article
+import com.example.newsapp.ui.ArticleDetail
+import com.example.newsapp.ui.Home.HomeView
+import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var isBaseScreen : Boolean by remember { mutableStateOf(true) }
-            var article by remember { mutableStateOf(null) }
+            var isBaseScreen by remember { mutableStateOf(true) }
+            var article by remember { mutableStateOf<Article?>(null) }
+            var title by remember { mutableStateOf("Daily News") }
             NewsappTheme {
                 var navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = { MyTopAppBar("News", navController,isBaseScreen) },
+                    topBar = {
+                        MyTopAppBar(
+                            navController = navController,
+                            title,
+                            isBaseScreen,
+                            article)
+                    },
                     bottomBar = {
                         MyBottomBar(
                             navController = navController
-                        )}
+                        )
+                    }
                 ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Home.route
-                    ) {
+                    NavHost(navController = navController,
+                        startDestination = Screen.Home.route ) {
                         composable(route = Screen.Home.route) {
-                            NewsApp(
+                            isBaseScreen = true
+                            article = null
+                            title = "Home"
+                            HomeView(
                                 navController = navController,
                                 modifier = Modifier.padding(innerPadding)
                             )
-                            isBaseScreen = true
-                        }
-                        composable(route = Screen.ArticleDetail.route) {
-                            val url = it.arguments?.getString("articleUrl")
-                            ArticleDetail(
-                                modifier = Modifier.padding(innerPadding),
-                                url = url ?: ""
-
-                            )
-                            isBaseScreen = false
                         }
                         composable(route = Screen.Favorites.route) {
                             isBaseScreen = true
@@ -66,6 +70,15 @@ class MainActivity : ComponentActivity() {
                             FavoritesView(
                                 navController = navController,
                                 modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+                        composable(route = Screen.ArticleDetail.route) {
+                            isBaseScreen = false
+                            val articleJsonString = it.arguments?.getString("article")
+                            article = Article.fromjson(JSONObject(articleJsonString!!))
+                            ArticleDetail(
+                                modifier = Modifier.padding(innerPadding),
+                                article = article!!
                             )
                         }
                     }
@@ -77,6 +90,7 @@ class MainActivity : ComponentActivity() {
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
-    object ArticleDetail : Screen("article_detail/{articleUrl}")
     object Favorites : Screen("favorites")
+    object ArticleDetail : Screen("article_detail/{article}")
+
 }
