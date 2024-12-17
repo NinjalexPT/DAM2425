@@ -63,7 +63,7 @@ fun RegisterView(modifier: Modifier = Modifier, navController: NavController = r
                     if (viewModel.CheckPasswords()) {
                         viewModel.onRegisterClick()
                     }
-                    if(state.error == "") {
+                    if(state.error == null) {
                         navController.navigate(Screen.Home.route)
                     }
 
