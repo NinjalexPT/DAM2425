@@ -48,7 +48,7 @@ class RegisterViewModel : ViewModel() {
         } else return true
     }
 
-    fun onRegisterClick() {
+    fun onRegisterClick(onRegisterSuccess: ()->Unit) {
         state.value = state.value.copy(isLoading = true)
 
         val auth: FirebaseAuth = Firebase.auth
@@ -61,6 +61,7 @@ class RegisterViewModel : ViewModel() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "createUserWithEmail:success")
                         val user = auth.currentUser
+                        onRegisterSuccess()
                     } else {
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
                         state.value =

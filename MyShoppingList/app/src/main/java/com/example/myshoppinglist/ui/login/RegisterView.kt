@@ -21,7 +21,7 @@ import com.example.myshoppinglist.Screen
 import com.example.myshoppinglist.ui.theme.MyShoppingListTheme
 
 @Composable
-fun RegisterView(modifier: Modifier = Modifier, navController: NavController = rememberNavController()) {
+fun RegisterView(modifier: Modifier = Modifier, navController: NavController = rememberNavController(),onRegisterSuccess : ()->Unit = {}) {
 
     val viewModel: RegisterViewModel = viewModel()
     val state = viewModel.state.value
@@ -61,12 +61,8 @@ fun RegisterView(modifier: Modifier = Modifier, navController: NavController = r
             Button(
                 onClick = {
                     if (viewModel.CheckPasswords()) {
-                        viewModel.onRegisterClick()
+                        viewModel.onRegisterClick(onRegisterSuccess)
                     }
-                    if(state.error == null) {
-                        navController.navigate(Screen.Home.route)
-                    }
-
                 },
                 content = {
                     Text("Register")

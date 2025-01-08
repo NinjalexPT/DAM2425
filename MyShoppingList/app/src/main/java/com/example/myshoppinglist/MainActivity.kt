@@ -6,18 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -80,7 +72,10 @@ class MainActivity : ComponentActivity() {
                             AddListView(navController = navController)
                         }
                         composable (Screen.Register.route){
-                            RegisterView(navController = navController)
+                            RegisterView(navController = navController,
+                                onRegisterSuccess = {
+                                navController.navigate(Screen.Home.route)
+                            })
                         }
                         composable(Screen.ListItems.route) {
                             val listId = it.arguments?.getString("listId")
